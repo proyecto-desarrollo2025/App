@@ -272,3 +272,4 @@ src/ProyectoDesarrollo2025.Blazor.Server.Tiered/Logs/*
 # IdentityServer temp files
 tempkey.rsa
 tempkey.jwk
+/README.md
