@@ -254,17 +254,17 @@ paket-files/
 # ABP Studio
 **/.abpstudio/
 
-# ProyectoDesarrollo2025
-src/ProyectoDesarrollo2025.Web/Logs/*
-src/ProyectoDesarrollo2025.Web.Host/Logs/*
-src/ProyectoDesarrollo2025.Web.Public/Logs/*
-src/ProyectoDesarrollo2025.Web.Public.Host/Logs/*
-src/ProyectoDesarrollo2025.AuthServer/Logs/*
-src/ProyectoDesarrollo2025.HttpApi.Host/Logs/*
-src/ProyectoDesarrollo2025.HttpApi.Host/Logs/*
-src/ProyectoDesarrollo2025.DbMigrator/Logs/*
-src/ProyectoDesarrollo2025.Blazor.Server/Logs/*
-src/ProyectoDesarrollo2025.Blazor.Server.Tiered/Logs/*
+# FAFS
+src/FAFS.Web/Logs/*
+src/FAFS.Web.Host/Logs/*
+src/FAFS.Web.Public/Logs/*
+src/FAFS.Web.Public.Host/Logs/*
+src/FAFS.AuthServer/Logs/*
+src/FAFS.HttpApi.Host/Logs/*
+src/FAFS.HttpApi.Host/Logs/*
+src/FAFS.DbMigrator/Logs/*
+src/FAFS.Blazor.Server/Logs/*
+src/FAFS.Blazor.Server.Tiered/Logs/*
 
 # Use abp install-libs to restore.
 **/wwwroot/libs/*
@@ -272,4 +272,3 @@ src/ProyectoDesarrollo2025.Blazor.Server.Tiered/Logs/*
 # IdentityServer temp files
 tempkey.rsa
 tempkey.jwk
-/README.md

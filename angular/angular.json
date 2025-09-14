@@ -7,7 +7,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ProyectoDesarrollo2025": {
+    "FAFS": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -21,7 +21,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ProyectoDesarrollo2025",
+            "outputPath": "dist/FAFS",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -169,10 +169,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "ProyectoDesarrollo2025:build:production"
+              "buildTarget": "FAFS:build:production"
             },
             "development": {
-              "buildTarget": "ProyectoDesarrollo2025:build:development"
+              "buildTarget": "FAFS:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -180,7 +180,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "ProyectoDesarrollo2025:build"
+            "buildTarget": "FAFS:build"
           }
         },
         "test": {

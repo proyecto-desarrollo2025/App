@@ -1,9 +1,9 @@
 ﻿{
   "applications": {
-    "ProyectoDesarrollo2025.HttpApi.Host": {
+    "FAFS.HttpApi.Host": {
       "type": "dotnet-project",
-      "launchUrl": "https://localhost:44379",
-      "path": "../../../src/ProyectoDesarrollo2025.HttpApi.Host/ProyectoDesarrollo2025.HttpApi.Host.csproj",
+      "launchUrl": "https://localhost:44358",
+      "path": "../../../src/FAFS.HttpApi.Host/FAFS.HttpApi.Host.csproj",
       "kubernetesService": ".*-httpapihost$",
       "healthCheckEndpoint": "/health-status",
       "healthUiEndpoint": "/health-ui",
@@ -11,7 +11,7 @@
         "order": 4
       }
     },
-    "ProyectoDesarrollo2025.Angular": {
+    "FAFS.Angular": {
       "type": "cli",
       "workingDirectory": "../../../angular",
       "startCommand": "./start.ps1",
@@ -23,6 +23,6 @@
     }
   },
   "containers": {
-    "serviceName": "ProyectoDesarrollo2025-Containers",
+    "serviceName": "FAFS-Containers",
   }
 }
