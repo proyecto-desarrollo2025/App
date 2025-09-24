@@ -22,6 +22,8 @@ public class FAFSDbContext :
     AbpDbContext<FAFSDbContext>,
     IIdentityDbContext
 {
+    private const string Schema = "Abp";
+
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
     public DbSet<Destination> Destinations { get; set; }
@@ -83,7 +85,7 @@ public class FAFSDbContext :
 
         builder.Entity<Destination>(b =>
         {
-            b.ToTable("Destinations"); // Nombre de la tabla
+            b.ToTable(name: "Destination", Schema); // Nombre de la tabla
             b.ConfigureByConvention(); // Configura las propiedades estándar (Id, etc.)
 
             b.Property(d => d.Name).IsRequired();

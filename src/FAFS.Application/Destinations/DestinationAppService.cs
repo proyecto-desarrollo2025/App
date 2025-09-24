@@ -1,10 +1,10 @@
-﻿using System;
+﻿using FAFS.Application.Contracts.Destinations;  // DTOs
+using FAFS.Destinations;                         // Entidad y ValueObject
+using System;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
-using FAFS.Destinations;                         // Entidad y ValueObject
-using FAFS.Application.Contracts.Destinations;  // DTOs
 
 namespace FAFS.Application.Destinations
 {
@@ -62,14 +62,13 @@ namespace FAFS.Application.Destinations
                 coordinates: new Coordinates(input.Latitude, input.Longitude)
             );
 
-            await _destinationRepository.InsertAsync(destination, autoSave: true);
+            // ✅ Guardar en BD usando la variable correcta
+            var savedEntity = await _destinationRepository.InsertAsync(destination, autoSave: true);
 
             // ✅ Mapear a DTO de salida
-            return ObjectMapper.Map<Destination, DestinationDto>(destination);
+            return ObjectMapper.Map<Destination, DestinationDto>(savedEntity);
         }
     }
 }
-
-
 
 

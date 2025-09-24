@@ -256,6 +256,8 @@ public class FAFSHttpApiHostModule : AbpModule
         app.UseAuthentication();
         app.UseAbpOpenIddictValidation();
 
+#pragma warning disable CS0162
+ 
         if (MultiTenancyConsts.IsEnabled)
         {
             app.UseMultiTenancy();
