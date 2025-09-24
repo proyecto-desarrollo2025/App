@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FAFS.Destination
+namespace FAFS.Destinations
 {
-    internal class Destination
+    internal class AppDbContext
     {
     }
 }
