@@ -13,7 +13,7 @@ using Volo.Abp.EntityFrameworkCore;
 namespace FAFS.Migrations
 {
     [DbContext(typeof(FAFSDbContext))]
-    [Migration("20250924042806_AddedDestinationEntity")]
+    [Migration("20250924053909_AddedDestinationEntity")]
     partial class AddedDestinationEntity
     {
         /// <inheritdoc />
