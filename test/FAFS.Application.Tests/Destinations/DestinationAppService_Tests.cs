@@ -1,13 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using FAFS.Application.Contracts.Destinations;
+using FAFS.Application.Destinations;
+using FAFS.Destinations;
+using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using System;
+using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Validation;
 using Xunit;
-using FAFS.Destinations;
-using FAFS.Application.Contracts.Destinations;
-using FAFS.Application.Destinations;
-using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace FAFS.Application.Tests.Destinations
 {
@@ -43,5 +44,63 @@ namespace FAFS.Application.Tests.Destinations
             var entity = await _destinationRepository.GetAsync(result.Id);
             entity.Name.ShouldBe("Cataratas del Iguazú");
         }
+
+        [Fact]
+        public async Task Should_Throw_Exception_When_Name_Is_Empty()
+        {
+            var input = new CreateDestinationDto
+            {
+                Name = "", // inválido
+                Country = "Argentina",
+                City = "Buenos Aires",
+                PhotoUrl = "http://example.com/photo.jpg",
+                Latitude = "-34.6037",
+                Longitude = "-58.3816"
+            };
+
+            await Assert.ThrowsAsync<AbpValidationException>(async () =>
+            {
+                await _destinationAppService.CreateAsync(input);
+            });
+        }
+
+        [Fact]
+        public async Task Should_Throw_Exception_When_Name_Is_Null()
+        {
+            var input = new CreateDestinationDto
+            {
+                Name = null!, // inválido
+                Country = "Argentina",
+                City = "Buenos Aires",
+                PhotoUrl = "http://example.com/photo.jpg",
+                Latitude = "-34.6037",
+                Longitude = "-58.3816"
+            };
+
+            await Assert.ThrowsAsync<AbpValidationException>(async () =>
+            {
+                await _destinationAppService.CreateAsync(input);
+            });
+        }
+
+        [Fact]
+        public async Task Should_Throw_Exception_When_Country_Is_Empty()
+        {
+            var input = new CreateDestinationDto
+            {
+                Name = "Destino X",
+                Country = "", // inválido
+                City = "Buenos Aires",
+                PhotoUrl = "http://example.com/photo.jpg",
+                Latitude = "-34.6037",
+                Longitude = "-58.3816"
+            };
+
+            await Assert.ThrowsAsync<AbpValidationException>(async () =>
+            {
+                await _destinationAppService.CreateAsync(input);
+            });
+        }
     }
 }
+
