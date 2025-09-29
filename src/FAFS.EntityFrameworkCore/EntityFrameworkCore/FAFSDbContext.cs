@@ -53,7 +53,7 @@ public class FAFSDbContext :
 
     #endregion
 
-    public FAFSDbContext(DbContextOptions<FAFSDbContext> options)
+    public FAFSDbContext(DbContextOptions<FAFSDbContext> options) // EF Core constructor
         : base(options)
     {
 
@@ -85,21 +85,30 @@ public class FAFSDbContext :
 
         builder.Entity<Destination>(b =>
         {
-            b.ToTable(name: "Destination", Schema); // Nombre de la tabla
-            b.ConfigureByConvention(); // Configura las propiedades estándar (Id, etc.)
+            b.ToTable("Destination", Schema);
+            b.ConfigureByConvention(); // Id, propiedades de auditoría, etc.
 
+            // Propiedades escalares obligatorias
             b.Property(d => d.Name).IsRequired();
             b.Property(d => d.Country).IsRequired();
             b.Property(d => d.City).IsRequired();
-            b.Property(d => d.PhotoUrl);
+
+            // Propiedades escalares opcionales
+            b.Property(d => d.PhotoUrl).HasMaxLength(500); // opcional: limitar tamaño
             b.Property(d => d.LastUpdated);
 
-            // Value Object Coordinates
+            // 🔹 Value Object Coordinates
             b.OwnsOne(d => d.Coordinates, c =>
             {
-                c.Property(p => p.Latitude).HasColumnName("Latitude");
-                c.Property(p => p.Longitude).HasColumnName("Longitude");
+                c.Property(p => p.Latitude)
+                 .HasColumnName("Latitude")
+                 .IsRequired();
+
+                c.Property(p => p.Longitude)
+                 .HasColumnName("Longitude")
+                 .IsRequired();
             });
         });
+
     }
 }

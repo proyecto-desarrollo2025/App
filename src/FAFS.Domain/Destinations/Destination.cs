@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.Domain.Values;
 
 namespace FAFS.Destinations
 {
@@ -13,11 +11,12 @@ namespace FAFS.Destinations
         public string Country { get; private set; } = string.Empty;
         public string City { get; private set; } = string.Empty;
         public string PhotoUrl { get; private set; } = string.Empty;
-        public Coordinates Coordinates { get; private set; } = new Coordinates(string.Empty, string.Empty);
+        public Coordinates Coordinates { get; private set; } = default!;
         public DateTime LastUpdated { get; private set; } = DateTime.Now;
 
-        // ValueObject
-        protected Destination() { } // Requerido por EF
+        // EF requiere ctor protegido
+        protected Destination() { }
+
         public Destination(
             int id,
             string name,
@@ -36,17 +35,27 @@ namespace FAFS.Destinations
             Coordinates = coordinates;
         }
     }
-    // Value Object
-    public class Coordinates
+
+    // ✅ Value Object correcto
+    public class Coordinates : ValueObject
     {
         public string Latitude { get; private set; } = string.Empty;
         public string Longitude { get; private set; } = string.Empty;
-        protected Coordinates() { } // EF necesita constructor sin parámetros
+
+        // EF necesita constructor protegido
+        protected Coordinates() { }
+
         public Coordinates(string latitude, string longitude)
         {
             Latitude = latitude;
             Longitude = longitude;
         }
+
+        // Esto hace que el ValueObject compare por contenido
+        protected override IEnumerable<object> GetAtomicValues()
+        {
+            yield return Latitude;
+            yield return Longitude;
+        }
     }
 }
-
