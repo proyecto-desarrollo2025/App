@@ -26,11 +26,8 @@ namespace FAFS.Migrations
 
             modelBuilder.Entity("FAFS.Destinations.Destination", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -77,7 +74,8 @@ namespace FAFS.Migrations
 
                     b.Property<string>("PhotoUrl")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
 
@@ -1857,8 +1855,8 @@ namespace FAFS.Migrations
                 {
                     b.OwnsOne("FAFS.Destinations.Coordinates", "Coordinates", b1 =>
                         {
-                            b1.Property<int>("DestinationId")
-                                .HasColumnType("int");
+                            b1.Property<Guid>("DestinationId")
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Latitude")
                                 .IsRequired()

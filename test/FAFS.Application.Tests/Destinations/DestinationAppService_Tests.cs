@@ -1,32 +1,29 @@
-﻿using FAFS.Application.Contracts.Destinations;
-using FAFS.Application.Destinations;
-using FAFS.Destinations;
-using Microsoft.Extensions.DependencyInjection;
+﻿using FAFS.Destinations;
 using Shouldly;
 using System;
 using System.Threading.Tasks;
-using Volo.Abp;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Validation;
 using Xunit;
+using FAFS.Application.Contracts.Destinations;
 
 namespace FAFS.Application.Tests.Destinations
 {
     public class DestinationAppService_Tests : FAFSApplicationTestBase
     {
         private readonly DestinationAppService _destinationAppService;
-        private readonly IRepository<Destination, int> _destinationRepository;
+        private readonly IRepository<Destination, Guid> _destinationRepository;
 
         public DestinationAppService_Tests()
         {
-            _destinationRepository = GetRequiredService<IRepository<Destination, int>>();
+            _destinationRepository = GetRequiredService<IRepository<Destination, Guid>>();
             _destinationAppService = GetRequiredService<DestinationAppService>();
         }
 
         [Fact]
         public async Task Should_Create_Destination_Successfully()
         {
-            var input = new CreateDestinationDto
+            var input = new CreateUpdateDestinationDto
             {
                 Name = "Cataratas del Iguazú",
                 Country = "Argentina",
@@ -48,7 +45,7 @@ namespace FAFS.Application.Tests.Destinations
         [Fact]
         public async Task Should_Throw_Exception_When_Name_Is_Empty()
         {
-            var input = new CreateDestinationDto
+            var input = new CreateUpdateDestinationDto
             {
                 Name = "", // inválido
                 Country = "Argentina",
@@ -67,7 +64,7 @@ namespace FAFS.Application.Tests.Destinations
         [Fact]
         public async Task Should_Throw_Exception_When_Name_Is_Null()
         {
-            var input = new CreateDestinationDto
+            var input = new CreateUpdateDestinationDto
             {
                 Name = null!, // inválido
                 Country = "Argentina",
@@ -86,7 +83,7 @@ namespace FAFS.Application.Tests.Destinations
         [Fact]
         public async Task Should_Throw_Exception_When_Country_Is_Empty()
         {
-            var input = new CreateDestinationDto
+            var input = new CreateUpdateDestinationDto
             {
                 Name = "Destino X",
                 Country = "", // inválido

@@ -11,11 +11,13 @@ namespace FAFS
             CreateMap<Destination, DestinationDto>()
                 .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Coordinates.Latitude))
                 .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.Coordinates.Longitude));
-            
-            CreateMap<CreateUpdateDestinationDto, DestinationDto>()
-                .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Latitude ?? ""))
-                .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.Longitude ?? ""));
-            
+
+
+
+            CreateMap<CreateUpdateDestinationDto, Destination>()
+                 .ForMember(dest => dest.Coordinates, opt => opt.MapFrom(src => new Coordinates(src.Latitude ?? string.Empty,
+            src.Longitude ?? string.Empty)));
+
         }
     }
 }
