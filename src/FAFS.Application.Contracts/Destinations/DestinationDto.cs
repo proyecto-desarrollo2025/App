@@ -1,10 +1,11 @@
 ﻿using System;
+using Volo.Abp.Application.Dtos;    
 
 namespace FAFS.Application.Contracts.Destinations
 {
-    public class DestinationDto : audi
+    public class DestinationDto : AuditedEntityDto<Guid>
     {
-        public int Id { get; set; }
+        public int Guid { get; set; }
         public string Name { get; set; } = string.Empty;
         public string? Country { get; set; }
         public string? City { get; set; }

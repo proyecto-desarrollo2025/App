@@ -13,7 +13,7 @@ namespace FAFS.Destinations
     public interface IDestinationAppService :
         ICrudAppService<
             DestinationDto,              // DTO de salida (para mostrar)
-            int,                         // Tipo de la PK de la entidad
+            Guid,                         // Tipo de la PK de la entidad
             PagedAndSortedResultRequestDto, // Para paginación y ordenamiento
             CreateUpdateDestinationDto   // DTO para crear/actualizar
         >

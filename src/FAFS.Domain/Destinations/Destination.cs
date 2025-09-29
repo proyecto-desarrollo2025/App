@@ -5,7 +5,7 @@ using Volo.Abp.Domain.Values;
 
 namespace FAFS.Destinations
 {
-    public class Destination : AuditedAggregateRoot<int>
+    public class Destination : AuditedAggregateRoot<Guid>
     {
         public string Name { get; private set; } = string.Empty;
         public string Country { get; private set; } = string.Empty;
@@ -18,7 +18,7 @@ namespace FAFS.Destinations
         protected Destination() { }
 
         public Destination(
-            int id,
+            Guid id,
             string name,
             string country,
             string city,

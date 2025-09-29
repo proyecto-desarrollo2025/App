@@ -1,8 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using Volo.Abp.Application.Dtos;
+
 
 namespace FAFS.Application.Contracts.Destinations
 {
-    public class CreateUpdateDestinationDto
+    public class CreateUpdateDestinationDto : AuditedEntityDto<Guid>
     {
         [Required]
         [StringLength(200)]
