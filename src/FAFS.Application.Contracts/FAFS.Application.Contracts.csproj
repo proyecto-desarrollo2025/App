@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Destinations\CreateDestinationDto.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\FAFS.Domain.Shared\FAFS.Domain.Shared.csproj" />
   </ItemGroup>
   

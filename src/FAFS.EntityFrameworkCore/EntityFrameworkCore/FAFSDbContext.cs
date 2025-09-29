@@ -1,3 +1,4 @@
+using FAFS.Destinations;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -9,9 +10,9 @@ using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
+using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
-using Volo.Abp.OpenIddict.EntityFrameworkCore;
 
 namespace FAFS.EntityFrameworkCore;
 
@@ -21,8 +22,11 @@ public class FAFSDbContext :
     AbpDbContext<FAFSDbContext>,
     IIdentityDbContext
 {
+    private const string Schema = "Abp";
+
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
+    public DbSet<Destination> Destinations { get; set; }
 
     #region Entities from the modules
 
@@ -49,7 +53,7 @@ public class FAFSDbContext :
 
     #endregion
 
-    public FAFSDbContext(DbContextOptions<FAFSDbContext> options)
+    public FAFSDbContext(DbContextOptions<FAFSDbContext> options) // EF Core constructor
         : base(options)
     {
 
@@ -69,7 +73,7 @@ public class FAFSDbContext :
         builder.ConfigureIdentity();
         builder.ConfigureOpenIddict();
         builder.ConfigureBlobStoring();
-        
+
         /* Configure your own tables/entities inside here */
 
         //builder.Entity<YourEntity>(b =>
@@ -78,5 +82,33 @@ public class FAFSDbContext :
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
+
+        builder.Entity<Destination>(b =>
+        {
+            b.ToTable("Destination", Schema);
+            b.ConfigureByConvention(); // Id, propiedades de auditoría, etc.
+
+            // Propiedades escalares obligatorias
+            b.Property(d => d.Name).IsRequired();
+            b.Property(d => d.Country).IsRequired();
+            b.Property(d => d.City).IsRequired();
+
+            // Propiedades escalares opcionales
+            b.Property(d => d.PhotoUrl).HasMaxLength(500); // opcional: limitar tamaño
+            b.Property(d => d.LastUpdated);
+
+            // 🔹 Value Object Coordinates
+            b.OwnsOne(d => d.Coordinates, c =>
+            {
+                c.Property(p => p.Latitude)
+                 .HasColumnName("Latitude")
+                 .IsRequired();
+
+                c.Property(p => p.Longitude)
+                 .HasColumnName("Longitude")
+                 .IsRequired();
+            });
+        });
+
     }
 }
