@@ -19,10 +19,16 @@ namespace FAFS.Destinations
          CreateUpdateDestinationDto>, //Used to create/update a destination
      IDestinationAppService //implement the IBookAppService
     {
-        public DestinationAppService(IRepository<Destination, Guid> repository)
+        private readonly ICitySearchService _citySearchService;
+        public DestinationAppService(IRepository<Destination, Guid> repository, ICitySearchService citySearchService)
             : base(repository)
         {
+            _citySearchService = citySearchService;
+        }
 
+        public async Task<CitySearchResultDto> SearchCitiesAsync(CitySearchRequestDto request)
+        {
+            return await _citySearchService.SearchCitiesAsync(request);
         }
     }
 }
