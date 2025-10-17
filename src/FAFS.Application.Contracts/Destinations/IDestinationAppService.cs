@@ -18,5 +18,7 @@ namespace FAFS.Destinations
             CreateUpdateDestinationDto   // DTO para crear/actualizar
         >
     {
+        // Custom method for searching cities (external service)
+        Task<CitySearchResultDto> SearchCitiesAsync(CitySearchRequestDto input);
     }
 }

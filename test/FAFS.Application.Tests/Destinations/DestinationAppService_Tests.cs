@@ -9,33 +9,95 @@ using FAFS.Application.Contracts.Destinations;
 
 namespace FAFS.Application.Tests.Destinations
 {
-    public abstract class DestinationAppService_Tests : FAFSApplicationTestBase
+    public class DestinationAppService_Tests : FAFSApplicationTestBase
     {
-       private readonly IDestinationAppService _service;
+        private readonly DestinationAppService _destinationAppService;
+        private readonly IRepository<Destination, Guid> _destinationRepository;
 
-        protected DestinationAppService_Tests()
+        public DestinationAppService_Tests()
         {
-            _service = GetRequiredService<IDestinationAppService>();
+            _destinationRepository = GetRequiredService<IRepository<Destination, Guid>>();
+            _destinationAppService = GetRequiredService<DestinationAppService>();
         }
 
         [Fact]
-        public async Task CreateAsync_ShouldReturnCreatedDestinationDto ()
+        public async Task Should_Create_Destination_Successfully()
         {
-            // Arrange
-            var createDto = new CreateUpdateDestinationDto
+            var input = new CreateUpdateDestinationDto
             {
-                Name = "Test Destination",
-                Country = "Test Location"
+                Name = "Cataratas del Iguazú",
+                Country = "Argentina",
+                City = "Puerto Iguazú",
+                PhotoUrl = "http://example.com/photo.jpg",
+                Latitude = "-25.6953",
+                Longitude = "-54.4367"
             };
-            // Act
-            var result = await _service.CreateAsync(createDto);
-            // Assert
+
+            var result = await _destinationAppService.CreateAsync(input);
+
             result.ShouldNotBeNull();
-            result.Id.ShouldNotBe(Guid.Empty);
-            result.Name.ShouldBe(createDto.Name);
-            result.Country.ShouldBe(createDto.Country);
+            result.Name.ShouldBe("Cataratas del Iguazú");
+
+            var entity = await _destinationRepository.GetAsync(result.Id);
+            entity.Name.ShouldBe("Cataratas del Iguazú");
+        }
+
+        [Fact]
+        public async Task Should_Throw_Exception_When_Name_Is_Empty()
+        {
+            var input = new CreateUpdateDestinationDto
+            {
+                Name = "", // inválido
+                Country = "Argentina",
+                City = "Buenos Aires",
+                PhotoUrl = "http://example.com/photo.jpg",
+                Latitude = "-34.6037",
+                Longitude = "-58.3816"
+            };
+
+            await Assert.ThrowsAsync<AbpValidationException>(async () =>
+            {
+                await _destinationAppService.CreateAsync(input);
+            });
+        }
+
+        [Fact]
+        public async Task Should_Throw_Exception_When_Name_Is_Null()
+        {
+            var input = new CreateUpdateDestinationDto
+            {
+                Name = null!, // inválido
+                Country = "Argentina",
+                City = "Buenos Aires",
+                PhotoUrl = "http://example.com/photo.jpg",
+                Latitude = "-34.6037",
+                Longitude = "-58.3816"
+            };
+
+            await Assert.ThrowsAsync<AbpValidationException>(async () =>
+            {
+                await _destinationAppService.CreateAsync(input);
+            });
+        }
+
+        [Fact]
+        public async Task Should_Throw_Exception_When_Country_Is_Empty()
+        {
+            var input = new CreateUpdateDestinationDto
+            {
+                Name = "Destino X",
+                Country = "", // inválido
+                City = "Buenos Aires",
+                PhotoUrl = "http://example.com/photo.jpg",
+                Latitude = "-34.6037",
+                Longitude = "-58.3816"
+            };
+
+            await Assert.ThrowsAsync<AbpValidationException>(async () =>
+            {
+                await _destinationAppService.CreateAsync(input);
+            });
         }
     }
 }
-
 
