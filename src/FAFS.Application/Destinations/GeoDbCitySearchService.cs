@@ -58,7 +58,10 @@ namespace FAFS.Destinations
                     Console.WriteLine($"[ERROR] Status: {(int)response.StatusCode} - {response.ReasonPhrase}");
                     Console.WriteLine($"[ERROR] Body: {errorContent}");
                 }
+               
 
+                // Por esta línea correcta:
+                Console.WriteLine($"URL final: {_options.GeoDb.BaseUrl}{url}");
                 // Asegurar éxito (lanzará excepción si no es 2xx)
                 response.EnsureSuccessStatusCode();
 
