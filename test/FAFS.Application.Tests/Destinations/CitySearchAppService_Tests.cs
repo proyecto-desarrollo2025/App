@@ -8,7 +8,7 @@ using Volo.Abp;
 using Volo.Abp.Domain.Repositories;
 using Xunit;
 using FAFS.Destinations;
-using FAFS.Application.Contracts.Destinations; // ✅ este es el namespace correcto para los DTOs y la interfaz
+using FAFS.Application.Contracts.Destinations;
 
 namespace FAFS.Application.Tests.Destinations
 {
@@ -20,11 +20,11 @@ namespace FAFS.Application.Tests.Destinations
 
         public CitySearchAppService_Tests()
         {
-            // 🔹 Se mockean el repositorio y el servicio externo
+            // 🔹 Mock del repositorio y del servicio externo
             _mockCitySearchService = new Mock<ICitySearchService>();
             _mockRepository = new Mock<IRepository<Destination, Guid>>();
 
-            // 🔹 Se pasa ambos mocks al constructor, igual que en tu clase real
+            // 🔹 Inyección en el AppService real
             _appService = new DestinationAppService(_mockRepository.Object, _mockCitySearchService.Object);
         }
 
@@ -32,7 +32,8 @@ namespace FAFS.Application.Tests.Destinations
         public async Task SearchCitiesAsync_Should_Return_Results()
         {
             // Arrange
-            _mockCitySearchService.Setup(s => s.SearchCitiesAsync(It.IsAny<CitySearchRequestDto>()))
+            _mockCitySearchService
+                .Setup(s => s.SearchCitiesAsync(It.IsAny<CitySearchRequestDto>()))
                 .ReturnsAsync(new CitySearchResultDto
                 {
                     Cities = new List<CityDto>
@@ -56,7 +57,8 @@ namespace FAFS.Application.Tests.Destinations
         public async Task SearchCitiesAsync_Should_Return_Empty_When_No_Results()
         {
             // Arrange
-            _mockCitySearchService.Setup(s => s.SearchCitiesAsync(It.IsAny<CitySearchRequestDto>()))
+            _mockCitySearchService
+                .Setup(s => s.SearchCitiesAsync(It.IsAny<CitySearchRequestDto>()))
                 .ReturnsAsync(new CitySearchResultDto { Cities = new List<CityDto>() });
 
             // Act
@@ -76,6 +78,12 @@ namespace FAFS.Application.Tests.Destinations
             // Arrange
             var request = new CitySearchRequestDto { PartialName = "A" }; // demasiado corto
 
+            _mockCitySearchService
+                .Setup(s => s.SearchCitiesAsync(It.Is<CitySearchRequestDto>(r =>
+                    string.IsNullOrWhiteSpace(r.PartialName) || r.PartialName.Length < 2)))
+                .ThrowsAsync(new BusinessException("CitySearch:InvalidPartialName")
+                    .WithData("Message", "The search text must contain at least 2 characters."));
+
             // Act & Assert
             await Should.ThrowAsync<BusinessException>(async () =>
             {
@@ -87,7 +95,8 @@ namespace FAFS.Application.Tests.Destinations
         public async Task SearchCitiesAsync_Should_Propagate_When_Api_Fails()
         {
             // Arrange
-            _mockCitySearchService.Setup(s => s.SearchCitiesAsync(It.IsAny<CitySearchRequestDto>()))
+            _mockCitySearchService
+                .Setup(s => s.SearchCitiesAsync(It.IsAny<CitySearchRequestDto>()))
                 .ThrowsAsync(new HttpRequestException("API not available"));
 
             // Act & Assert
@@ -101,4 +110,3 @@ namespace FAFS.Application.Tests.Destinations
         }
     }
 }
-

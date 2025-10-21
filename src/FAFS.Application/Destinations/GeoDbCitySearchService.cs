@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Volo.Abp;
 
 namespace FAFS.Destinations
 {
@@ -26,7 +27,10 @@ namespace FAFS.Destinations
         {
             // Validación básica
             if (string.IsNullOrWhiteSpace(request.PartialName) || request.PartialName.Trim().Length < 2)
-                throw new ArgumentException("The search text must contain at least 2 characters.", nameof(request.PartialName));
+            {
+                throw new BusinessException("CitySearch:InvalidPartialName")
+                    .WithData("Message", "The search text must contain at least 2 characters.");
+            }
 
             // Crear cliente HTTP
             var client = _httpClientFactory.CreateClient("GeoDbClient");
