@@ -1,4 +1,5 @@
-﻿using FAFS.EntityFrameworkCore;
+﻿using FAFS.Application.Tests.Destinations;
+using FAFS.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,7 @@ using Xunit;
 namespace FAFS.Destinations
 {
     [Collection(FAFSTestConsts.CollectionDefinitionName)]
-    internal class EfCoreDestinationsTest
-        : DestinationAppService_Tests<FAFSEntityFrameworkCoreTestModule>
+    internal class EfCoreDestinationsTest : DestinationAppService_Tests
     {
     }
 }
