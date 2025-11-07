@@ -51,6 +51,7 @@ namespace FAFS;
     typeof(FAFSApplicationModule),
     typeof(FAFSEntityFrameworkCoreModule),
     typeof(AbpAccountWebOpenIddictModule),
+    typeof(AbpOpenIddictAspNetCoreModule),
     typeof(AbpSwashbuckleModule),
     typeof(AbpAspNetCoreSerilogModule)
     )]
@@ -63,12 +64,29 @@ public class FAFSHttpApiHostModule : AbpModule
 
         PreConfigure<OpenIddictBuilder>(builder =>
         {
+
             builder.AddValidation(options =>
             {
-                options.AddAudiences("FAFS");
+                options.AddAudiences("FAFS", "FAFS_App", "FAFS_Swagger");
                 options.UseLocalServer();
                 options.UseAspNetCore();
             });
+        });
+
+        PreConfigure<OpenIddictServerBuilder>(serverBuilder =>
+        {
+            // Endpoint del token
+            serverBuilder.SetTokenEndpointUris("/connect/token");
+
+            // Permitir flujo password (usuario/contraseña)
+            serverBuilder.AllowPasswordFlow();
+
+            // Aceptar clientes sin autenticación adicional
+            serverBuilder.AcceptAnonymousClients();
+
+            // 🔹 Firmar y cifrar tokens con certificados temporales (para desarrollo)
+            serverBuilder.AddDevelopmentEncryptionCertificate()
+                         .AddDevelopmentSigningCertificate();
         });
 
         if (!hostingEnvironment.IsDevelopment())
@@ -80,7 +98,12 @@ public class FAFSHttpApiHostModule : AbpModule
 
             PreConfigure<OpenIddictServerBuilder>(serverBuilder =>
             {
-                serverBuilder.AddProductionEncryptionAndSigningCertificate("openiddict.pfx", configuration["AuthServer:CertificatePassPhrase"]!);
+                // 🔹 Solo certificados reales y configuración de producción
+                serverBuilder.AddProductionEncryptionAndSigningCertificate(
+                    "openiddict.pfx",
+                    configuration["AuthServer:CertificatePassPhrase"]!
+                );
+
                 serverBuilder.SetIssuer(new Uri(configuration["AuthServer:Authority"]!));
             });
         }
@@ -191,12 +214,12 @@ public class FAFSHttpApiHostModule : AbpModule
     {
         context.Services.AddAbpSwaggerGenWithOidc(
             configuration["AuthServer:Authority"]!,
-            ["TravelBuddy"],
+            ["FAFS"],
             [AbpSwaggerOidcFlows.AuthorizationCode],
             null,
             options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "TravelBuddy API", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "FAFS", Version = "v1" });
                 options.DocInclusionPredicate((docName, description) => true);
                 options.CustomSchemaIds(type => type.FullName);
                 // :candado: Agrego definición manual de esquema Bearer

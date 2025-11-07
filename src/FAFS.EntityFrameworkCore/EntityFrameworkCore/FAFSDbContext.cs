@@ -20,7 +20,7 @@ namespace FAFS.EntityFrameworkCore;
 
 [ReplaceDbContext(typeof(IIdentityDbContext))]
 [ConnectionStringName("Default")]
-public class FAFSDbContext :AbpDbContext<FAFSDbContext>, IIdentityDbContext
+public class FAFSDbContext : AbpDbContext<FAFSDbContext>, IIdentityDbContext
 {
     private const string Schema = "Abp";
     private readonly ICurrentUser? _currentUser;
@@ -111,20 +111,22 @@ public class FAFSDbContext :AbpDbContext<FAFSDbContext>, IIdentityDbContext
                  .IsRequired();
             });
 
-        builder.Entity<DestinationRating>(b =>
+            builder.Entity<DestinationRating>(b =>
             {
                 b.ToTable("DestinationRatings", Schema);
                 b.ConfigureByConvention();
+
                 b.Property(x => x.Score).IsRequired();
                 b.Property(x => x.Comment).HasMaxLength(1000);
-                b.Property(x => x.CreationTime).IsRequired();
 
                 b.HasIndex(x => new { x.UserId, x.DestinationId }).IsUnique(false);
 
+                // 🔹 Filtro automático por usuario autenticado
                 b.HasQueryFilter(rating =>
-                _currentUser == null || !_currentUser.IsAuthenticated || rating.UserId == _currentUser.GetId());
+                    _currentUser == null ||
+                    !_currentUser.IsAuthenticated ||
+                    rating.UserId == _currentUser.GetId());
             });
         });
-
-    }
+     }   
 }
