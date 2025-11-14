@@ -46,5 +46,6 @@ El proyecto está construido sobre **ABP.IO**, utiliza **DDD**, integra APIs ext
 
 ## 👤 Autores
 Alumno: **Ramos, Alexander Javier**
+
 Proyecto desarrollado para **UTN – Facultad Regional Concepción del Uruguay**  
 Materia: *Desarrollo de Software — Año 2025*
