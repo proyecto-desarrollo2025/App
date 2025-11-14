@@ -8,7 +8,6 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <RootNamespace>FAFS</RootNamespace>
     <PreserveCompilationReferences>true</PreserveCompilationReferences>
-    <UserSecretsId>84b9ea59-54a5-4110-b206-65ea0589e475</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'FAFS.HttpApi.Host' " />

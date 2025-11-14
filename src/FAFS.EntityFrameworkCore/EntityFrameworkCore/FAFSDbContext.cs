@@ -13,20 +13,22 @@ using Volo.Abp.Identity.EntityFrameworkCore;
 using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
+using Volo.Abp.Users;
+using FAFS; // para que reconozca IUserOwned y DestinationRating
 
 namespace FAFS.EntityFrameworkCore;
 
 [ReplaceDbContext(typeof(IIdentityDbContext))]
 [ConnectionStringName("Default")]
-public class FAFSDbContext :
-    AbpDbContext<FAFSDbContext>,
-    IIdentityDbContext
+public class FAFSDbContext : AbpDbContext<FAFSDbContext>, IIdentityDbContext
 {
     private const string Schema = "Abp";
+    private readonly ICurrentUser? _currentUser;
 
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
     public DbSet<Destination> Destinations { get; set; }
+    public DbSet<DestinationRating> DestinationRatings { get; set; }
 
     #region Entities from the modules
 
@@ -108,7 +110,23 @@ public class FAFSDbContext :
                  .HasColumnName("Longitude")
                  .IsRequired();
             });
-        });
 
-    }
+            builder.Entity<DestinationRating>(b =>
+            {
+                b.ToTable("DestinationRatings", Schema);
+                b.ConfigureByConvention();
+
+                b.Property(x => x.Score).IsRequired();
+                b.Property(x => x.Comment).HasMaxLength(1000);
+
+                b.HasIndex(x => new { x.UserId, x.DestinationId }).IsUnique(false);
+
+                // 🔹 Filtro automático por usuario autenticado
+                b.HasQueryFilter(rating =>
+                    _currentUser == null ||
+                    !_currentUser.IsAuthenticated ||
+                    rating.UserId == _currentUser.GetId());
+            });
+        });
+     }   
 }
