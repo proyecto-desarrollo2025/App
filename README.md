@@ -1,67 +1,50 @@
-﻿# FAFS
+# 🌐 FAFS — *Fast Access to Favorite Sites*
 
-## About this solution
+**FAFS** es una aplicación web moderna que permite buscar destinos turísticos, acceder rápidamente a información relevante y mantener una lista personalizada de lugares favoritos.  
+El proyecto está construido sobre **ABP.IO**, utiliza **DDD**, integra APIs externas y ofrece un ecosistema completo con autenticación, notificaciones, métricas y un panel administrativo.
 
-This is a layered startup solution based on [Domain Driven Design (DDD)](https://abp.io/docs/latest/framework/architecture/domain-driven-design) practises. All the fundamental ABP modules are already installed. Check the [Application Startup Template](https://abp.io/docs/latest/solution-templates/layered-web-application) documentation for more info.
+> 🚀 *Una plataforma rápida, modular y extensible para explorar destinos y gestionar sitios favoritos.*
 
-### Pre-requirements
+---
 
-* [.NET9.0+ SDK](https://dotnet.microsoft.com/download/dotnet)
-* [Node v18 or 20](https://nodejs.org/en)
+## ✨ Características Principales
 
-### Configurations
+### 🔍 Búsqueda de ciudades y destinos turísticos
+- Integración con API externa (GeoDB Cities)
+- Búsqueda por nombre, país o prefijo
+- Resultados con país, población, coordenadas e imagen
 
-The solution comes with a default configuration that works out of the box. However, you may consider to change the following configuration before running your solution:
+### 📌 Lista personal de destinos favoritos
+- Guardar destinos en una lista personalizada
+- Información persistida en la base interna
+- Actualizaciones automáticas cuando cambian datos del destino
 
-* Check the `ConnectionStrings` in `appsettings.json` files under the `FAFS.HttpApi.Host` and `FAFS.DbMigrator` projects and change it if you need.
+### 🔔 Notificaciones inteligentes
+- Notificaciones en pantalla y por correo
+- Cambios relevantes: nuevos eventos, actualizaciones de datos, etc.
+- Configuración por usuario (inmediatas o resumen semanal)
 
-### Before running the application
+### ⭐ Calificaciones y comentarios
+- Los usuarios pueden puntuar destinos (1 a 5 estrellas)
+- Comentarios privados por destino
+- Edición y eliminación de calificaciones
 
-* Run `abp install-libs` command on your solution folder to install client-side package dependencies. This step is automatically done when you create a new solution, if you didn't especially disabled it. However, you should run it yourself if you have first cloned this solution from your source control, or added a new client-side package dependency to your solution.
-* Run `FAFS.DbMigrator` to create the initial database. This step is also automatically done when you create a new solution, if you didn't especially disabled it. This should be done in the first run. It is also needed if a new database migration is added to the solution later.
+### 🛠️ Panel de Administración
+- Gestión de usuarios y roles
+- Métricas del sistema:
+  - Destinos más buscados  
+  - Cantidad de búsquedas  
+  - Tiempos de respuesta de la API  
+- Logs y auditoría integrados
 
-#### Generating a Signing Certificate
+### 🔐 Seguridad
+- Autenticación y autorización mediante Identity ABP
+- Roles: **Administrador** y **Usuario**
+- Protección contra CSRF, XSS, validaciones y hashing de contraseñas
 
-In the production environment, you need to use a production signing certificate. ABP Framework sets up signing and encryption certificates in your application and expects an `openiddict.pfx` file in your application.
+---
 
-To generate a signing certificate, you can use the following command:
-
-```bash
-dotnet dev-certs https -v -ep openiddict.pfx -p 0e00bca9-b9e8-404b-a130-1f9b93f4d033
-```
-
-> `0e00bca9-b9e8-404b-a130-1f9b93f4d033` is the password of the certificate, you can change it to any password you want.
-
-It is recommended to use **two** RSA certificates, distinct from the certificate(s) used for HTTPS: one for encryption, one for signing.
-
-For more information, please refer to: [OpenIddict Certificate Configuration](https://documentation.openiddict.com/configuration/encryption-and-signing-credentials.html#registering-a-certificate-recommended-for-production-ready-scenarios)
-
-> Also, see the [Configuring OpenIddict](https://abp.io/docs/latest/Deployment/Configuring-OpenIddict#production-environment) documentation for more information.
-
-### Solution structure
-
-This is a layered monolith application that consists of the following applications:
-
-* `FAFS.DbMigrator`: A console application which applies the migrations and also seeds the initial data. It is useful on development as well as on production environment.
-* `FAFS.HttpApi.Host`: ASP.NET Core API application that is used to expose the APIs to the clients.
-* `angular`: Angular application.
-
-
-## Deploying the application
-
-Deploying an ABP application follows the same process as deploying any .NET or ASP.NET Core application. However, there are important considerations to keep in mind. For detailed guidance, refer to ABP's [deployment documentation](https://abp.io/docs/latest/Deployment/Index).
-
-### Additional resources
-
-
-#### Internal Resources
-
-You can find detailed setup and configuration guide(s) for your solution below:
-
-* [Angular](./angular/README.md)
-
-#### External Resources
-You can see the following resources to learn more about your solution and the ABP Framework:
-
-* [Web Application Development Tutorial](https://abp.io/docs/latest/tutorials/book-store/part-1)
-* [Application Startup Template](https://abp.io/docs/latest/startup-templates/application/index)
+## 👤 Autores
+Alumno: **Ramos, Alexander Javier**
+Proyecto desarrollado para **UTN – Facultad Regional Concepción del Uruguay**  
+Materia: *Desarrollo de Software — Año 2025*
