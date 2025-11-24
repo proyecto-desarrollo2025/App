@@ -9,6 +9,11 @@ namespace FAFS.Security;
 [Dependency(ReplaceServices = true)]
 public class FakeCurrentPrincipalAccessor : ThreadCurrentPrincipalAccessor
 {
+    public void SetCurrentPrincipal(ClaimsPrincipal principal)
+    {
+        throw new NotImplementedException();
+    }
+
     protected override ClaimsPrincipal GetClaimsPrincipal()
     {
         return GetPrincipal();
