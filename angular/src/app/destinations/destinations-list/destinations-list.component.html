@@ -1,0 +1,64 @@
+<h2>Ciudades</h2>
+
+<!-- FILA DE INPUTS: PAÍS + CIUDAD -->
+<div class="row mb-3">
+  <!-- Nombre de ciudad -->
+  <div class="col-md-6">
+    <label class="form-label"><strong>Nombre de ciudad:</strong></label>
+    <input type="text"
+           class="form-control"
+           placeholder="Ej: Buenos Aires"
+           [(ngModel)]="searchParams.partialName" />
+  </div>
+  <!-- Código de país -->
+  <div class="col-md-6">
+    <label class="form-label"><strong>Código de país:</strong></label>
+    <input type="text"
+           class="form-control"
+           placeholder="Ej: AR, US, MX"
+           [(ngModel)]="searchParams.countryCode" />
+  </div>
+</div>
+
+<!-- BOTONES -->
+<div class="mb-3">
+
+  <button class="btn btn-primary me-2"
+          (click)="search()"
+          [disabled]="!isFormValid() || loading">
+    Buscar
+  </button>
+
+  <button class="btn btn-secondary"
+          (click)="clear()">
+    Limpiar
+  </button>
+
+</div>
+
+<hr />
+
+<!-- LOADING -->
+<div *ngIf="loading" class="text-muted">
+  Cargando ciudades...
+</div>
+
+<!-- SIN RESULTADOS -->
+<div *ngIf="!loading && cities.length === 0">
+  No hay resultados.
+</div>
+
+<!-- RESULTADOS -->
+<ul *ngIf="cities.length > 0" class="list-group">
+  <li class="list-group-item" *ngFor="let city of cities">
+    <strong>{{ city.name }}</strong> ({{ city.country }} / {{ city.countryCode }})<br />
+
+    Lat: {{ city.latitude }} - Lng: {{ city.longitude }}<br />
+    Región: {{ city.region || 'N/A' }}<br />
+
+    <button class="btn btn-sm btn-outline-primary mt-2"
+            (click)="openInMaps(city)">
+      Ver en Google Maps
+    </button>
+  </li>
+</ul>

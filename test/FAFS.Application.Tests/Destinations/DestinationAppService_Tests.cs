@@ -1,9 +1,11 @@
 ﻿using FAFS.Destinations;
 using Shouldly;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Validation;
+using Volo.Abp.Security.Claims;
 using Xunit;
 using FAFS.Application.Contracts.Destinations;
 
@@ -13,11 +15,26 @@ namespace FAFS.Application.Tests.Destinations
     {
         private readonly DestinationAppService _destinationAppService;
         private readonly IRepository<Destination, Guid> _destinationRepository;
+        private readonly ICurrentPrincipalAccessor _currentPrincipalAccessor; // nuevo
 
         public DestinationAppService_Tests()
         {
             _destinationRepository = GetRequiredService<IRepository<Destination, Guid>>();
             _destinationAppService = GetRequiredService<DestinationAppService>();
+            _currentPrincipalAccessor = GetRequiredService<ICurrentPrincipalAccessor>(); // nuevo
+        }
+
+        private ClaimsPrincipal CreateTestPrincipal(Guid? userId = null)
+        {
+            var id = userId ?? Guid.NewGuid();
+
+            var claims = new[]
+            {
+                new Claim(AbpClaimTypes.UserId, id.ToString()),
+                new Claim(AbpClaimTypes.UserName, "test-user")
+            };
+
+            return new ClaimsPrincipal(new ClaimsIdentity(claims, "TestAuth"));
         }
 
         [Fact]
@@ -33,13 +50,17 @@ namespace FAFS.Application.Tests.Destinations
                 Longitude = "-54.4367"
             };
 
-            var result = await _destinationAppService.CreateAsync(input);
+            // 🔹 Simulamos usuario autenticado durante este test
+            using (_currentPrincipalAccessor.Change(CreateTestPrincipal()))
+            {
+                var result = await _destinationAppService.CreateAsync(input);
 
-            result.ShouldNotBeNull();
-            result.Name.ShouldBe("Cataratas del Iguazú");
+                result.ShouldNotBeNull();
+                result.Name.ShouldBe("Cataratas del Iguazú");
 
-            var entity = await _destinationRepository.GetAsync(result.Id);
-            entity.Name.ShouldBe("Cataratas del Iguazú");
+                var entity = await _destinationRepository.GetAsync(result.Id);
+                entity.Name.ShouldBe("Cataratas del Iguazú");
+            }
         }
 
         [Fact]
@@ -55,10 +76,13 @@ namespace FAFS.Application.Tests.Destinations
                 Longitude = "-58.3816"
             };
 
-            await Assert.ThrowsAsync<AbpValidationException>(async () =>
+            using (_currentPrincipalAccessor.Change(CreateTestPrincipal()))
             {
-                await _destinationAppService.CreateAsync(input);
-            });
+                await Assert.ThrowsAsync<AbpValidationException>(async () =>
+                {
+                    await _destinationAppService.CreateAsync(input);
+                });
+            }
         }
 
         [Fact]
@@ -74,10 +98,13 @@ namespace FAFS.Application.Tests.Destinations
                 Longitude = "-58.3816"
             };
 
-            await Assert.ThrowsAsync<AbpValidationException>(async () =>
+            using (_currentPrincipalAccessor.Change(CreateTestPrincipal()))
             {
-                await _destinationAppService.CreateAsync(input);
-            });
+                await Assert.ThrowsAsync<AbpValidationException>(async () =>
+                {
+                    await _destinationAppService.CreateAsync(input);
+                });
+            }
         }
 
         [Fact]
@@ -93,11 +120,13 @@ namespace FAFS.Application.Tests.Destinations
                 Longitude = "-58.3816"
             };
 
-            await Assert.ThrowsAsync<AbpValidationException>(async () =>
+            using (_currentPrincipalAccessor.Change(CreateTestPrincipal()))
             {
-                await _destinationAppService.CreateAsync(input);
-            });
+                await Assert.ThrowsAsync<AbpValidationException>(async () =>
+                {
+                    await _destinationAppService.CreateAsync(input);
+                });
+            }
         }
     }
 }
-
